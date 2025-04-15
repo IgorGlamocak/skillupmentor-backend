@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { configValidationSchema } from 'config/schema.config'
-import { LoggerMiddleware } from '../middleware/logger.middleware'
 import { DatabaseModule } from './database/database.module'
+import { LoggerMiddleware } from '../middleware/logger.middleware'
+import { UsersModule } from './users/users.module'
+import { AuthModule } from 'auth/auth.module'
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { DatabaseModule } from './database/database.module'
       validationSchema: configValidationSchema,
     }),
     DatabaseModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
