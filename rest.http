@@ -6,9 +6,9 @@ POST http://localhost:8080/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  	"email": "john@gmail.com",
-  	"password": "John123!",
-  	"confirm_password": "John123!"
+  	"email": "igor.glamocak@gmail.com",
+  	"password": "Igor123!",
+  	"confirm_password": "Igor123!"
 }
 
 ### POST /auth/login
@@ -16,8 +16,8 @@ POST http://localhost:8080/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  	"email": "john@gmail.com",
-  	"password": "John123!"
+  	"email": "igor.glamocak@gmail.com",
+  	"password": "Igor123!"
 }
 
 ### GET /auth
@@ -25,3 +25,51 @@ GET http://localhost:8080/auth HTTP/1.1
 
 ### POST /auth/signout
 POST http://localhost:8080/auth/signout HTTP/1.1
+
+### PATCH /users/:id
+PATCH http://localhost:8080/users/6bea8318-4063-4717-abbb-44697faa03f7 HTTP/1.1
+Content-Type: application/json
+
+{
+  "role_id": "94feb307-903b-4027-8091-a4ca7e6d235e"
+}
+
+
+### GET /users
+GET http://localhost:8080/users HTTP/1.1
+
+### GET /permissions
+GET http://localhost:8080/permissions HTTP/1.1
+
+
+### POST /permissions
+POST http://localhost:8080/permissions HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "delete_role"
+}
+
+### GET /roles
+GET http://localhost:8080/roles HTTP/1.1
+
+### POST /roles
+POST http://localhost:8080/roles HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "permissions": ["0a497422-65b5-4251-b73b-b221c548a4b2", "a145d548-ce78-4d4b-a068-fcd78d6cce16", "7cfd0e6e-dd65-45fd-98ef-7049e4f9876a", "63f9e778-c9cf-4db6-8b9d-b982c59d13a0"]
+}
+
+### DELETE /roles/:id
+DELETE http://localhost:8080/roles/ad58c478-ca2a-4ea3-b0c6-b95cd4fca6b2
+
+### PATCH /roles/:id
+PATCH http://localhost:8080/roles/24ec9b62-e675-4ae3-b565-616f80234046
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "permissions": ["0c8447b1-dbf0-4ae3-b27b-e91d1ab0a745", "571db79b-a963-4741-9720-e9bcb95cde69"]
+}

@@ -19,7 +19,7 @@ export class UpdateUserDto {
   @IsOptional()
   avatar?: string
 
-  @ValidateIf((o) => typeof o.password === 'string' && o.password.length > 0)
+  @ValidateIf((o) => typeof o?.password === 'string' && o.password.length > 0)
   @IsOptional()
   @Matches(/^(?=.*\d)[A-Za-z.\s_-]+[\w~@#$%^&*+='{};!?:".?()\[\]-]{6,}$/, {
     message:
