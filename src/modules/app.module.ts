@@ -8,6 +8,7 @@ import { AuthModule } from 'auth/auth.module'
 import { RolesModule } from './roles/roles.module'
 import { PermissionsModule } from './permissions/permissions.module'
 import { ProductsModule } from './products/products.module'
+import { OrdersModule } from './orders/orders.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ProductsModule } from './products/products.module'
     RolesModule,
     PermissionsModule,
     ProductsModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
