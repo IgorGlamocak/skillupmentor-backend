@@ -19,6 +19,8 @@ import { RegisterUserDto } from './dto/register-user.dto'
 import { LocalAuthGuard } from './guards/local-auth.guard'
 import { RequestWithUser } from 'interfaces/auth.interface'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
@@ -37,7 +39,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Req() req: RequestWithUser, @Res({ passthrough: true }) res: Response): Promise<User> {
     const access_token = await this.authService.generateJwt(req.user)
-    res.cookie('access_token', access_token, { httpOnly: true })
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    })
     return req.user
   }
 
@@ -51,7 +57,11 @@ export class AuthController {
   @Post('signout')
   @HttpCode(HttpStatus.OK)
   async signout(@Res({ passthrough: true }) res: Response): Promise<{ msg: string }> {
-    res.clearCookie('access_token')
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    })
     return { msg: 'OK' }
   }
 }

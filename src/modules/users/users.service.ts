@@ -16,13 +16,21 @@ export class UsersService extends AbstractService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.findBy({ email: createUserDto.email })
-    if (user) {
+    // Check for existing email
+    const existing = await this.findBy({ email: createUserDto.email })
+    if (existing) {
       throw new BadRequestException('User with that email already exists.')
     }
+
     try {
-      const newUser = this.usersRepository.create({ ...createUserDto, role: { id: createUserDto.role_id } })
-      return this.usersRepository.save(newUser)
+      // Hash the password before saving
+      const hashedPassword = await hash(createUserDto.password)
+      const newUser = this.usersRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+        role: { id: createUserDto.role_id },
+      })
+      return await this.usersRepository.save(newUser)
     } catch (error) {
       Logging.error(error)
       throw new BadRequestException('Something went wrong while creating user')

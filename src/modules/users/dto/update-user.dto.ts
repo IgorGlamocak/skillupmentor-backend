@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, Matches, ValidateIf } from 'class-validator'
+import { IsEmail, IsOptional, ValidateIf } from 'class-validator'
 import { Match } from '../../../decorators/match.decorator'
 
 export class UpdateUserDto {
@@ -11,7 +11,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEmail()
   email?: string
-  // role_id: string
 
   @IsOptional()
   role_id?: string
@@ -19,16 +18,13 @@ export class UpdateUserDto {
   @IsOptional()
   avatar?: string
 
-  @ValidateIf((o) => typeof o?.password === 'string' && o.password.length > 0)
   @IsOptional()
-  @Matches(/^(?=.*\d)[A-Za-z.\s_-]+[\w~@#$%^&*+='{};!?:".?()\[\]-]{6,}$/, {
-    message:
-      'Password must have at least one number, lower or upper case letter and it has to be longer than 5 characters.',
-  })
   password?: string
 
-  @ValidateIf((o) => typeof o.confirm.password === 'string' && o.confirm.password.length > 0)
-  @IsOptional()
-  @Match(UpdateUserDto, (field) => field.password, { message: 'Passwords do not match' })
+  // Only validate confirm_password if password was provided
+  @ValidateIf((o) => typeof o.password === 'string' && o.password.length > 0)
+  @Match(UpdateUserDto, (o) => o.password, {
+    message: 'Passwords do not match',
+  })
   confirm_password?: string
 }

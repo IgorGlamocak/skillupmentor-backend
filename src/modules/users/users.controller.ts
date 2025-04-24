@@ -41,7 +41,7 @@ export class UsersController {
     return this.usersService.findById(id)
   }
 
-  @Post(':id')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto)
