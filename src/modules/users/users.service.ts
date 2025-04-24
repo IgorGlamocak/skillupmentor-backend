@@ -29,12 +29,18 @@ export class UsersService extends AbstractService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, dto: UpdateUserDto): Promise<User> {
     const user = (await this.findById(id)) as User
-    const { email, password, confirm_password, role_id, ...data } = updateUserDto
-    if (user.email !== email && email) {
+    const { email, password, confirm_password, role_id, ...data } = dto
+
+    if (email && email !== user.email) {
+      const conflict = await this.usersRepository.findOne({ where: { email } })
+      if (conflict) {
+        throw new BadRequestException('User with that email already exists.')
+      }
       user.email = email
     }
+
     if (password && confirm_password) {
       if (password !== confirm_password) {
         throw new BadRequestException('Passwords do not match')
@@ -44,16 +50,20 @@ export class UsersService extends AbstractService {
       }
       user.password = await hash(password)
     }
+
     if (role_id) {
       user.role = { ...user.role, id: role_id }
     }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined) {
+        ;(user as any)[key] = value
+      }
+    })
+
     try {
-      Object.entries(data).map((entry) => {
-        user[entry[0]] = entry[1]
-      })
-      return this.usersRepository.save(user)
+      return await this.usersRepository.save(user)
     } catch (error) {
-      Logging.error(error)
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new BadRequestException('User with that email already exists.')
       }
